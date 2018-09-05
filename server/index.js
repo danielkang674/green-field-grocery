@@ -1,13 +1,19 @@
-var express = require('express');
-var bodyParser = require('body-parser');
-var items = require('../database-mongo');
+require('dotenv').config();
+const express = require('express');
+const bodyParser = require('body-parser');
+const items = require('../database-mongo');
+const { searchWalmart } = require('../helpers/walmart.js');
 
-var app = express();
+const app = express();
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
 app.use(express.static(__dirname + '/../react-client/dist'));
 
-app.get('/items', function (req, res) {
-  items.selectAll(function (err, data) {
+app.get('/items', (req, res) => {
+  items.selectAll((err, data) => {
     if (err) {
       res.sendStatus(500);
     } else {
@@ -16,7 +22,19 @@ app.get('/items', function (req, res) {
   });
 });
 
-app.listen(3000, function () {
+app.post('/search', (req, res) => {
+  searchWalmart(req.body.searchInput, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.sendStatus(500);
+    } else {
+      console.log(data);
+      res.json(data);
+    }
+  });
+});
+
+app.listen(3000, () => {
   console.log('listening on port 3000!');
 });
 
