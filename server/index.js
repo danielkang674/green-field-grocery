@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const items = require('../database-mongo');
+const { db } = require('../database-mongo');
 const { searchWalmart } = require('../helpers/walmart.js');
 
 const app = express();
@@ -34,7 +34,7 @@ app.post('/search', (req, res) => {
 });
 
 app.post('/addItem', (req, res) => {
-  console.log(req.body);
+  db.addItem(req.body);
   res.end();
 });
 

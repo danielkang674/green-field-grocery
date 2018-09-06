@@ -4,7 +4,7 @@ const addItem = (data) => {
   $.ajax({
     method: "POST",
     url: "/addItem",
-    data: { data: data }
+    data: data
   })
     .then(data => {
       console.log(data);

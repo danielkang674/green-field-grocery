@@ -1,7 +1,7 @@
-var mongoose = require('mongoose');
+const mongoose = require('mongoose');
 mongoose.connect('mongodb://localhost/groceryList');
 
-var db = mongoose.connection;
+const db = mongoose.connection;
 
 db.on('error', function () {
   console.log('mongoose connection error');
@@ -11,14 +11,15 @@ db.once('open', function () {
   console.log('mongoose connected successfully');
 });
 
-var itemSchema = mongoose.Schema({
+const itemSchema = mongoose.Schema({
   quantity: Number,
-  description: String
+  name: String,
+  itemId: Number
 });
 
-var Item = mongoose.model('Item', itemSchema);
+const Item = mongoose.model('Item', itemSchema);
 
-var selectAll = function (callback) {
+const selectAll = function (callback) {
   Item.find({}, function (err, items) {
     if (err) {
       callback(err, null);
@@ -28,4 +29,23 @@ var selectAll = function (callback) {
   });
 };
 
-module.exports.selectAll = selectAll;
+const addItem = (item, cb) => {
+  let options = { upsert: true };
+  let query = { itemId: item.itemId };
+  Item.findOne(query, (err, found) => {
+    if (err) {
+      console.log('err', err);
+      return;
+    }
+    if (!found) {
+      console.log('not found', found);
+      return;
+    }
+    if (found) {
+      console.log('found', found);
+      return;
+    }
+  })
+}
+
+module.exports.db = { selectAll, addItem };
