@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-const addItem = (data) => {
+const addItem = (data, cb) => {
   $.ajax({
     method: "POST",
     url: "/addItem",
@@ -8,6 +8,7 @@ const addItem = (data) => {
   })
     .then(data => {
       console.log(data);
+      cb();
     })
     .catch(err => {
       console.log(err);
