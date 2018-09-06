@@ -4,8 +4,10 @@ import ListItem from './ListItem.jsx';
 const List = (props) => (
   <div>
     <h4> List Component </h4>
-    There are {props.items.length} items.
-    {props.items.map(item => <ListItem item={item} key={item._id} />)}
+    <p>You have {props.items.length} grocery items.</p>
+    <ul>
+      {props.items.map(item => <ListItem item={item} key={item._id} removeFromShoppingList={props.removeFromShoppingList} />)}
+    </ul>
   </div>
 )
 

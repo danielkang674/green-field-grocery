@@ -1,9 +1,10 @@
 import React from 'react';
 
 const ListItem = (props) => (
-  <div>
-    {props.item.description} {props.item.quantity}
-  </div>
+  <li>
+    {props.item.quantity} {props.item.name}
+    <button onClick={() => { props.removeFromShoppingList(props.item.itemId) }}>Remove</button>
+  </li>
 )
 
 export default ListItem;

@@ -1,7 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const bodyParser = require('body-parser');
-const items = require('../database-mongo');
+const { db } = require('../database-mongo');
 const { searchWalmart } = require('../helpers/walmart.js');
 
 const app = express();
@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(express.static(__dirname + '/../react-client/dist'));
 
 app.get('/items', (req, res) => {
-  items.selectAll((err, data) => {
+  db.selectAll((err, data) => {
     if (err) {
       res.sendStatus(500);
     } else {
@@ -34,8 +34,24 @@ app.post('/search', (req, res) => {
 });
 
 app.post('/addItem', (req, res) => {
-  console.log(req.body);
-  res.end();
+  db.addItem(req.body, (err, data) => {
+    if (err) {
+      res.sendStatus(500);
+    } else {
+      res.end('Added to grocery list');
+    }
+  });
+});
+
+app.delete('/deleteItem', (req, res) => {
+  db.removeItem(req.body.itemId, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.sendStatus(500);
+    } else {
+      res.end();
+    }
+  });
 });
 
 app.listen(3000, () => {

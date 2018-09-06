@@ -6,6 +6,7 @@ import getItems from './services/getItems.jsx';
 import searchItem from './services/searchItem.jsx';
 import SearchedList from './components/SearchedList.jsx';
 import addItem from './services/addItem.jsx';
+import removeItem from './services/removeItem.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -16,11 +17,12 @@ class App extends React.Component {
     }
     this.handleSubmit = this.handleSubmit.bind(this);
     this.addToShoppingList = this.addToShoppingList.bind(this);
+    this.removeFromShoppingList = this.removeFromShoppingList.bind(this);
   }
 
   handleSubmit(e, searchInput) {
     searchItem(searchInput, (data) => {
-      this.setState({ searchItems: JSON.parse(data).items }, () => console.log(this.state.searchItems));
+      this.setState({ searchItems: JSON.parse(data).items })
     });
     e.preventDefault();
   }
@@ -32,7 +34,19 @@ class App extends React.Component {
   }
 
   addToShoppingList(item) {
-    addItem(item);
+    addItem(item, () => {
+      getItems(data => {
+        this.setState({ items: data });
+      });
+    });
+  }
+
+  removeFromShoppingList(itemId) {
+    removeItem(itemId, () => {
+      getItems(data => {
+        this.setState({ items: data });
+      });
+    });
   }
 
   render() {
@@ -40,7 +54,7 @@ class App extends React.Component {
       <h1>Shopping List</h1>
       <Search handleSubmit={this.handleSubmit} />
       <SearchedList searchItems={this.state.searchItems} addToShoppingList={this.addToShoppingList} />
-      <List items={this.state.items} />
+      <List items={this.state.items} removeFromShoppingList={this.removeFromShoppingList} />
     </div>)
   }
 }
